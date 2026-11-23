@@ -1,0 +1,1 @@
+{"name": "lookalike", "description": "Find duplicate and near-duplicate photos in your browser: perceptual hashing plus a BK-tree, nothing uploaded.", "language": "TypeScript", "arc_days": 7, "pages": true}
