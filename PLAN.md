@@ -5,7 +5,7 @@ Seven-day arc. Every milestone has acceptance criteria that can be checked by a 
 | Day | Milestone | Acceptance criteria | Status |
 |-----|-----------|---------------------|--------|
 | 1 | Scaffold and core algorithms | `bash check.sh` passes; aHash/dHash/pHash robust to noise, brightness and resize in tests; BK-tree results equal brute force; grouping tested | [x] |
-| 2 | Image pipeline | Decode File to RGBA via createImageBitmap with downscale; worker pool hashing; progress callback; unit tests with fake decoder; handles undecodable files without aborting | [ ] |
+| 2 | Image pipeline | Decode File to RGBA via createImageBitmap with downscale; worker pool hashing; progress callback; unit tests with fake decoder; handles undecodable files without aborting | [x] |
 | 3 | UI and Pages | Drop zone and folder picker; empty state; results grid of groups; deployed Pages page; responsive at 375px | [ ] |
 | 4 | Review workflow | Similarity slider regroups live; keep/remove marking with best-pick heuristic (resolution, size); keyboard shortcuts; export list as CSV | [ ] |
 | 5 | Quality and robustness | Rotation/flip-invariant matching option; exact-dup fast path by size+hash; benchmark: 10k hashes grouped under a budget enforced in check.sh | [ ] |

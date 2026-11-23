@@ -22,6 +22,7 @@ Everything is built from scratch to explore three ideas: perceptual hashing (aHa
 - `src/core/hash.ts`: hashes, Hamming distance, hex serialisation.
 - `src/core/bktree.ts`: BK-tree range search.
 - `src/core/group.ts`: duplicate grouping, plus a brute-force reference used in tests.
+- `src/pipeline/`: `decode.ts` (createImageBitmap + OffscreenCanvas, downscaled), `process.ts` (decode + hash, never throws in the worker), `scan.ts` (worker pool with progress, abort, crash recovery), `hash.worker.ts` (the web worker).
 
 Invariant: tree-based grouping returns exactly the same groups as the brute-force reference.
 
@@ -44,7 +45,8 @@ npm run build      # static build in dist/
 
 ## Roadmap
 - [x] Day 1: hashing, BK-tree, grouping, tests
-- [ ] Days 2 to 7: see [PLAN.md](PLAN.md)
+- [x] Day 2: decode pipeline and worker pool
+- [ ] Days 3 to 7: see [PLAN.md](PLAN.md)
 
 ## License
 MIT. See [LICENSE](LICENSE).
