@@ -1,6 +1,6 @@
 # lookalike
 
-**Live demo: https://striv11.github.io/lookalike/** (placeholder page until Day 3)
+**Live demo: https://striv11.github.io/lookalike/** 
 
 > Find duplicate and near-duplicate photos by dropping a folder into your browser. Nothing is uploaded.
 
@@ -22,6 +22,7 @@ Everything is built from scratch to explore three ideas: perceptual hashing (aHa
 - `src/core/hash.ts`: hashes, Hamming distance, hex serialisation.
 - `src/core/bktree.ts`: BK-tree range search.
 - `src/core/group.ts`: duplicate grouping, plus a brute-force reference used in tests.
+- `src/ui/`: `files.ts` (folder/drop traversal, image filtering), `model.ts` (outcomes to groups), `main.ts` (DOM wiring), `style.css` (responsive, light/dark via system preference).
 - `src/pipeline/`: `decode.ts` (createImageBitmap + OffscreenCanvas, downscaled), `process.ts` (decode + hash, never throws in the worker), `scan.ts` (worker pool with progress, abort, crash recovery), `hash.worker.ts` (the web worker).
 
 Invariant: tree-based grouping returns exactly the same groups as the brute-force reference.
@@ -36,7 +37,7 @@ npm run build      # static build in dist/
 ```
 
 ## Demo
-**Planned.** Open the live page, drop a folder of photos, and review grouped duplicates with a similarity slider. Day 1 ships only the tested core library.
+Open the live page, drop a folder of photos (or use the folder picker) and see grouped duplicates with per-file size and dimensions. A similarity slider and keep/remove marking arrive on Day 4.
 
 ## Design decisions & trade-offs
 - 64-bit hashes held as BigInt: simple and correct; may move to two uint32 if profiling demands.
@@ -46,7 +47,8 @@ npm run build      # static build in dist/
 ## Roadmap
 - [x] Day 1: hashing, BK-tree, grouping, tests
 - [x] Day 2: decode pipeline and worker pool
-- [ ] Days 3 to 7: see [PLAN.md](PLAN.md)
+- [x] Day 3: drop zone, folder picker, results grid
+- [ ] Days 4 to 7: see [PLAN.md](PLAN.md)
 
 ## License
 MIT. See [LICENSE](LICENSE).

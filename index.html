@@ -3,12 +3,40 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Find duplicate and near-duplicate photos in your browser. Nothing is uploaded."
+    />
     <title>lookalike: find duplicate photos in your browser</title>
+    <link rel="stylesheet" href="./src/ui/style.css" />
   </head>
   <body>
-    <main>
+    <header class="top">
       <h1>lookalike</h1>
-      <p>Duplicate photo finder that runs entirely in your browser. UI arrives on Day 3.</p>
+      <p class="tag">Find duplicate photos. Everything stays on your device.</p>
+    </header>
+    <main>
+      <section id="drop" class="drop" tabindex="0" aria-label="Drop photos or a folder here">
+        <p class="drop-title">Drop a folder of photos here</p>
+        <p class="hint">or choose them below</p>
+        <div class="actions">
+          <label class="btn">
+            Choose folder
+            <input id="pick-folder" type="file" webkitdirectory multiple hidden />
+          </label>
+          <label class="btn secondary">
+            Choose files
+            <input id="pick-files" type="file" accept="image/*" multiple hidden />
+          </label>
+        </div>
+      </section>
+      <section id="status" class="status" role="status" aria-live="polite" hidden>
+        <progress id="bar" max="1" value="0"></progress>
+        <span id="status-text"></span>
+        <button id="cancel" class="btn secondary" type="button">Cancel</button>
+      </section>
+      <section id="results" aria-live="polite"></section>
     </main>
+    <script type="module" src="./src/ui/main.ts"></script>
   </body>
 </html>

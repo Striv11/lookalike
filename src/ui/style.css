@@ -1,0 +1,131 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fafaf8;
+  --fg: #1c1c1a;
+  --muted: #6a6a64;
+  --card: #fff;
+  --line: #d8d8d0;
+  --accent: #2b59c3;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161614;
+    --fg: #ecece6;
+    --muted: #9a9a92;
+    --card: #1f1f1c;
+    --line: #34342f;
+    --accent: #7ba2ff;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font:
+    16px/1.5 system-ui,
+    sans-serif;
+}
+.top,
+main {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+.tag,
+.hint,
+.meta {
+  color: var(--muted);
+  margin: 0.25rem 0;
+}
+.drop {
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+.drop.over,
+.drop:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+.drop-title {
+  font-size: 1.125rem;
+  margin: 0;
+}
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+  font: inherit;
+}
+.btn.secondary {
+  background: transparent;
+  color: var(--accent);
+}
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.status progress {
+  flex: 1 1 10rem;
+}
+.summary {
+  margin: 1.5rem 0 0.5rem;
+}
+.group {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+}
+.group h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+}
+.thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--line);
+}
+.thumb .name {
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+.empty,
+.error {
+  text-align: center;
+  margin: 2rem 0;
+}
+.error {
+  color: #c0392b;
+}
