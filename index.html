@@ -35,6 +35,16 @@
         <span id="status-text"></span>
         <button id="cancel" class="btn secondary" type="button">Cancel</button>
       </section>
+      <section id="toolbar" class="toolbar" hidden>
+        <label for="radius">Similarity</label>
+        <input id="radius" type="range" min="0" max="16" step="1" value="8" />
+        <output id="radius-out" for="radius"></output>
+        <span id="removals" class="removals"></span>
+        <button id="export" class="btn secondary" type="button">Export CSV</button>
+        <p class="hint keys">
+          Keys: arrows move, Space/K toggles keep or remove, R resets the group, E exports.
+        </p>
+      </section>
       <section id="results" aria-live="polite"></section>
     </main>
     <script type="module" src="./src/ui/main.ts"></script>

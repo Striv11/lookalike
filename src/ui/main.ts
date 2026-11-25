@@ -1,6 +1,8 @@
 import { createHashWorker, scanFiles } from "../pipeline/scan";
 import { collectImages, filterImages, type EntryLike } from "./files";
-import { formatBytes, summarize, type ScanSummary } from "./model";
+import { DEFAULT_RADIUS, formatBytes, summarize, type ScanSummary } from "./model";
+import { countRemovals, markOf, resetGroup, toCsv, toggleMark, type Overrides } from "./review";
+import type { ScanOutcome } from "../pipeline/types";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const drop = $("drop");
@@ -9,7 +11,16 @@ const bar = $<HTMLProgressElement>("bar");
 const statusText = $("status-text");
 const results = $("results");
 
+const toolbar = $("toolbar");
+const radiusInput = $<HTMLInputElement>("radius");
+const radiusOut = $("radius-out");
+const removalsOut = $("removals");
+
 let urls: string[] = [];
+let currentFiles: File[] = [];
+let currentOutcomes: ScanOutcome[] = [];
+let current: ScanSummary | null = null;
+let overrides: Overrides = new Map();
 let controller: AbortController | null = null;
 
 function reset() {
@@ -27,6 +38,8 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: 
 
 function render(files: File[], s: ScanSummary) {
   reset();
+  current = s;
+  removalsOut.textContent = `${countRemovals(s.groups, overrides)} marked for removal`;
   const head = el(
     "p",
     "summary",
@@ -35,15 +48,21 @@ function render(files: File[], s: ScanSummary) {
   );
   results.append(head);
   if (s.groups.length === 0) {
-    results.append(el("p", "empty", "No duplicates found."));
+    results.append(el("p", "empty", "No duplicates found. Try raising the similarity slider."));
   }
   s.groups.forEach((g, gi) => {
     const box = el("article", "group");
+    box.dataset.group = String(gi);
     box.append(el("h3", undefined, `Group ${gi + 1} (${g.members.length} photos)`));
     const grid = el("div", "grid");
     for (const m of g.members) {
       const cell = el("figure", "thumb");
       cell.style.margin = "0";
+      cell.tabIndex = 0;
+      cell.dataset.index = String(m.index);
+      const mark = markOf(g, m, overrides);
+      cell.classList.add(mark);
+      cell.setAttribute("aria-label", `${m.name}: ${mark}`);
       const img = el("img");
       const url = URL.createObjectURL(files[m.index]!);
       urls.push(url);
@@ -52,9 +71,11 @@ function render(files: File[], s: ScanSummary) {
       img.loading = "lazy";
       cell.append(
         img,
+        el("div", `badge ${mark}`, mark === "keep" ? "Keep" : "Remove"),
         el("div", "name", m.name),
         el("div", "meta", `${m.width}×${m.height} · ${formatBytes(m.bytes)}`),
       );
+      cell.addEventListener("click", () => toggle(gi, m.index));
       grid.append(cell);
     }
     box.append(grid);
@@ -70,9 +91,70 @@ function render(files: File[], s: ScanSummary) {
   }
 }
 
+function regroup(refocus?: string) {
+  if (!currentOutcomes.length) return;
+  radiusOut.textContent = `${radiusInput.value} bits`;
+  render(currentFiles, summarize(currentOutcomes, Number(radiusInput.value)));
+  if (refocus) results.querySelector<HTMLElement>(`[data-index="${refocus}"]`)?.focus();
+}
+
+function toggle(gi: number, index: number) {
+  const g = current?.groups[gi];
+  const m = g?.members.find((x) => x.index === index);
+  if (!g || !m) return;
+  toggleMark(g, m, overrides);
+  regroup(String(index));
+}
+
+function exportCsv() {
+  if (!current) return;
+  const url = URL.createObjectURL(
+    new Blob([toCsv(current.groups, overrides)], { type: "text/csv" }),
+  );
+  const a = el("a");
+  a.href = url;
+  a.download = "lookalike-review.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+radiusInput.addEventListener("input", () => regroup());
+$("export").addEventListener("click", exportCsv);
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target as HTMLElement;
+  if (t instanceof HTMLInputElement && t.type !== "range") return;
+  const cell = t.closest<HTMLElement>(".thumb");
+  const key = e.key.toLowerCase();
+  if (key === "e" && current) {
+    exportCsv();
+    return;
+  }
+  if (!cell) return;
+  const gi = Number(cell.closest<HTMLElement>(".group")?.dataset.group);
+  const index = Number(cell.dataset.index);
+  if (key === " " || key === "k" || key === "enter") {
+    e.preventDefault();
+    toggle(gi, index);
+  } else if (key === "r") {
+    const g = current?.groups[gi];
+    if (g) {
+      resetGroup(g, overrides);
+      regroup(String(index));
+    }
+  } else if (key === "arrowright" || key === "arrowleft") {
+    e.preventDefault();
+    const all = [...results.querySelectorAll<HTMLElement>(".thumb")];
+    all[all.indexOf(cell) + (key === "arrowright" ? 1 : -1)]?.focus();
+  }
+});
+
 async function run(files: File[]) {
   controller?.abort();
   reset();
+  toolbar.hidden = true;
+  current = null;
+  currentOutcomes = [];
   if (files.length === 0) {
     results.append(el("p", "empty", "No image files found in that selection."));
     return;
@@ -92,7 +174,12 @@ async function run(files: File[]) {
         statusText.textContent = `Hashing ${p.done} / ${p.total}`;
       },
     });
-    render(files, summarize(outcomes));
+    currentFiles = files;
+    currentOutcomes = outcomes;
+    overrides = new Map();
+    radiusInput.value = String(DEFAULT_RADIUS);
+    toolbar.hidden = false;
+    regroup();
   } catch (e) {
     if ((e as DOMException).name === "AbortError") {
       if (controller === mine) results.append(el("p", "empty", "Scan cancelled."));
