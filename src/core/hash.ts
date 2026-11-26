@@ -70,14 +70,27 @@ export function pHash(img: Gray): Hash64 {
   return pack(Array.from(d, (v) => v > median));
 }
 
+function popcount32(x: number): number {
+  x -= (x >>> 1) & 0x55555555;
+  x = (x & 0x33333333) + ((x >>> 2) & 0x33333333);
+  x = (x + (x >>> 4)) & 0x0f0f0f0f;
+  return Math.imul(x, 0x01010101) >>> 24;
+}
+
+/** Split a hash into its high and low 32-bit halves as plain numbers (fast to compare). */
+export function split(h: Hash64): [number, number] {
+  return [Number(h >> 32n) | 0, Number(h & 0xffffffffn) | 0];
+}
+
+/** Hamming distance between two hashes already split with `split`. */
+export function hammingSplit(ah: number, al: number, bh: number, bl: number): number {
+  return popcount32(ah ^ bh) + popcount32(al ^ bl);
+}
+
 export function hamming(a: Hash64, b: Hash64): number {
-  let x = a ^ b;
-  let n = 0;
-  while (x) {
-    x &= x - 1n;
-    n++;
-  }
-  return n;
+  const [ah, al] = split(a);
+  const [bh, bl] = split(b);
+  return hammingSplit(ah, al, bh, bl);
 }
 
 export function toHex(h: Hash64): string {
