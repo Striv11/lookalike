@@ -27,3 +27,10 @@ Newest entries at the bottom. Each entry records what actually changed, what was
 - Wired the UI: similarity slider (0 to 16 bits) regroups live from the stored outcomes without rehashing; click/Space/K toggles, R resets a group, arrows move focus, E exports. Overrides are keyed by file index so they survive regrouping.
 - 5 new tests in `tests/review.test.ts` (39 total). Learned: vitest only includes `tests/**`, so a test placed next to the source was silently not run. As before, `main.ts` is not unit tested and I did not check it in a real browser; `vite build` succeeds. Day 6 e2e covers it.
 - Next: Day 5: rotation/flip-invariant matching, exact-duplicate fast path, 10k-hash benchmark with a budget in check.sh.
+
+## 2026-11-26 (Day 5)
+- Added `src/core/orient.ts` (8 dihedral orientations, `pHashVariants`); the worker now returns the 7 extra pHashes, and `groupDuplicates(entries, radius, { orientation })` probes the BK-tree with each variant. UI has a "Match rotated or flipped copies" checkbox that regroups live.
+- Exact-duplicate fast path: entries with the same `exactKey` (bytes + dimensions) and hash are unioned directly and skip the tree.
+- Performance: the first 10k benchmark took 23 s because BigInt popcount allocates. Hamming now works on two 32-bit number halves (`split`/`hammingSplit`, precomputed in tree nodes): 10k hashes group in ~1.5 s including corpus generation. `tests/bench.test.ts` enforces an 8 s ceiling (run by check.sh) and checks tree == brute force on 1,500 hashes.
+- Learned: a tiny synthetic image can clip to all zeros, making orientation tests vacuous, so test images need adequate size. Random variants are not closed under inversion, so the brute-force oracle must probe in the same direction as the tree; real variant sets are symmetric.
+- Next: Day 6 design system (themes, type scale, loading/error states) and Playwright e2e, which should also finally exercise real browser decoding and the new checkbox.

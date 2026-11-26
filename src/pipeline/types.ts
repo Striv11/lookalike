@@ -17,6 +17,8 @@ export interface HashedImage {
   aHash: Hash64;
   dHash: Hash64;
   pHash: Hash64;
+  /** pHash of the 7 other orientations (rotations and mirrors); absent in older results. */
+  pHashVariants?: Hash64[];
   width: number;
   height: number;
   bytes: number;

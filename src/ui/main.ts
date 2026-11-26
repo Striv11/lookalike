@@ -14,6 +14,7 @@ const results = $("results");
 const toolbar = $("toolbar");
 const radiusInput = $<HTMLInputElement>("radius");
 const radiusOut = $("radius-out");
+const orientInput = $<HTMLInputElement>("orient");
 const removalsOut = $("removals");
 
 let urls: string[] = [];
@@ -94,7 +95,12 @@ function render(files: File[], s: ScanSummary) {
 function regroup(refocus?: string) {
   if (!currentOutcomes.length) return;
   radiusOut.textContent = `${radiusInput.value} bits`;
-  render(currentFiles, summarize(currentOutcomes, Number(radiusInput.value)));
+  render(
+    currentFiles,
+    summarize(currentOutcomes, Number(radiusInput.value), {
+      orientation: orientInput.checked,
+    }),
+  );
   if (refocus) results.querySelector<HTMLElement>(`[data-index="${refocus}"]`)?.focus();
 }
 
@@ -119,6 +125,7 @@ function exportCsv() {
 }
 
 radiusInput.addEventListener("input", () => regroup());
+orientInput.addEventListener("change", () => regroup());
 $("export").addEventListener("click", exportCsv);
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;

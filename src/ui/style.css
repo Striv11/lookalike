@@ -169,3 +169,10 @@ h1 {
 .badge.remove {
   background: #b3261e;
 }
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}

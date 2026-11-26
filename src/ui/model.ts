@@ -1,4 +1,4 @@
-import { groupDuplicates } from "../core/group";
+import { groupDuplicates, type Entry, type GroupOptions } from "../core/group";
 import type { ScanOutcome } from "../pipeline/types";
 
 export interface Member {
@@ -24,9 +24,13 @@ export interface ScanSummary {
 export const DEFAULT_RADIUS = 8;
 
 /** Turn raw scan outcomes into duplicate groups plus a failure list. */
-export function summarize(outcomes: ScanOutcome[], radius = DEFAULT_RADIUS): ScanSummary {
+export function summarize(
+  outcomes: ScanOutcome[],
+  radius = DEFAULT_RADIUS,
+  opts: GroupOptions = {},
+): ScanSummary {
   const byIndex = new Map<number, Member>();
-  const entries = [];
+  const entries: Entry[] = [];
   const failures = [];
   for (const o of outcomes) {
     if (!o.ok) {
@@ -41,9 +45,14 @@ export function summarize(outcomes: ScanOutcome[], radius = DEFAULT_RADIUS): Sca
       height: r.height,
       bytes: r.bytes,
     });
-    entries.push({ id: o.index, hash: r.pHash });
+    entries.push({
+      id: o.index,
+      hash: r.pHash,
+      variants: r.pHashVariants,
+      exactKey: `${r.bytes}:${r.width}x${r.height}`,
+    });
   }
-  const groups = groupDuplicates(entries, radius).map((ids) => ({
+  const groups = groupDuplicates(entries, radius, opts).map((ids) => ({
     members: ids.map((i) => byIndex.get(i)!),
   }));
   return { scanned: outcomes.length, failed: failures.length, groups, failures };

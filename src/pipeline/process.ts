@@ -1,5 +1,6 @@
 import { rgbaToGray } from "../core/gray";
 import { aHash, dHash, pHash } from "../core/hash";
+import { pHashVariants } from "../core/orient";
 import type { Decoder, HashedImage, WorkerRequest, WorkerResponse } from "./types";
 
 /** Decode one file and compute all three hashes. Pure given the decoder. */
@@ -10,6 +11,7 @@ export async function hashFile(file: Blob, decode: Decoder): Promise<HashedImage
     aHash: aHash(gray),
     dHash: dHash(gray),
     pHash: pHash(gray),
+    pHashVariants: pHashVariants(gray).slice(1),
     width: d.originalWidth,
     height: d.originalHeight,
     bytes: file.size,

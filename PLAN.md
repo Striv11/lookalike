@@ -8,7 +8,7 @@ Seven-day arc. Every milestone has acceptance criteria that can be checked by a 
 | 2 | Image pipeline | Decode File to RGBA via createImageBitmap with downscale; worker pool hashing; progress callback; unit tests with fake decoder; handles undecodable files without aborting | [x] |
 | 3 | UI and Pages | Drop zone and folder picker; empty state; results grid of groups; deployed Pages page; responsive at 375px | [x] |
 | 4 | Review workflow | Similarity slider regroups live; keep/remove marking with best-pick heuristic (resolution, size); keyboard shortcuts; export list as CSV | [x] |
-| 5 | Quality and robustness | Rotation/flip-invariant matching option; exact-dup fast path by size+hash; benchmark: 10k hashes grouped under a budget enforced in check.sh | [ ] |
+| 5 | Quality and robustness | Rotation/flip-invariant matching option; exact-dup fast path by size+hash; benchmark: 10k hashes grouped under a budget enforced in check.sh | [x] |
 | 6 | Design system and e2e | Light/dark themes, type scale, loading and error states; Playwright e2e for drop, group, mark flows | [ ] |
 | 7 | Polish | Screenshots in README, landing section, accessibility pass, precision/recall evaluation documented | [ ] |
 
