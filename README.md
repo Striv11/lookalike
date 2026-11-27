@@ -23,7 +23,7 @@ Everything is built from scratch to explore three ideas: perceptual hashing (aHa
 - `src/core/bktree.ts`: BK-tree range search.
 - `src/core/orient.ts`: the 8 rotations/mirrors of an image and their pHashes.
 - `src/core/group.ts`: duplicate grouping (optional rotation/flip matching, exact-duplicate fast path), plus a brute-force reference used in tests.
-- `src/ui/`: `files.ts` (folder/drop traversal, image filtering), `model.ts` (outcomes to groups), `review.ts` (best-pick, marks, CSV), `main.ts` (DOM wiring), `style.css` (responsive, light/dark via system preference).
+- `src/ui/`: `files.ts` (folder/drop traversal, image filtering), `model.ts` (outcomes to groups), `review.ts` (best-pick, marks, CSV), `main.ts` (DOM wiring), `style.css` (design tokens, responsive, light/dark via system preference with a manual override).
 - `src/pipeline/`: `decode.ts` (createImageBitmap + OffscreenCanvas, downscaled), `process.ts` (decode + hash, never throws in the worker), `scan.ts` (worker pool with progress, abort, crash recovery), `hash.worker.ts` (the web worker).
 
 Invariant: tree-based grouping returns exactly the same groups as the brute-force reference.
@@ -35,6 +35,7 @@ npm ci
 bash check.sh      # format, lint, typecheck, tests
 npm run dev        # local dev server
 npm run build      # static build in dist/
+npm run e2e        # Playwright end-to-end tests (needs: npx playwright install chromium)
 ```
 
 ## Demo
@@ -52,7 +53,8 @@ Open the live page, drop a folder of photos (or use the folder picker) and see g
 - [x] Day 3: drop zone, folder picker, results grid
 - [x] Day 4: similarity slider, keep/remove review, CSV export
 - [x] Day 5: orientation-invariant matching, exact-duplicate fast path, 10k benchmark
-- [ ] Days 6 and 7: see [PLAN.md](PLAN.md)
+- [x] Day 6: design tokens, manual theme toggle, loading/error states, Playwright e2e
+- [ ] Day 7: see [PLAN.md](PLAN.md)
 
 ## License
 MIT. See [LICENSE](LICENSE).

@@ -1,20 +1,58 @@
 :root {
   color-scheme: light dark;
+  /* colour tokens (light) */
   --bg: #fafaf8;
   --fg: #1c1c1a;
   --muted: #6a6a64;
   --card: #fff;
   --line: #d8d8d0;
   --accent: #2b59c3;
+  --danger: #b3261e;
+  --ok: #1b7f3b;
+  /* type scale */
+  --fs-sm: 0.8125rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.5rem;
+  /* spacing and radius */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --radius: 12px;
+  --radius-sm: 8px;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --bg: #161614;
     --fg: #ecece6;
     --muted: #9a9a92;
     --card: #1f1f1c;
     --line: #34342f;
     --accent: #7ba2ff;
+    --danger: #ff8a80;
+    --ok: #5fcf80;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #161614;
+  --fg: #ecece6;
+  --muted: #9a9a92;
+  --card: #1f1f1c;
+  --line: #34342f;
+  --accent: #7ba2ff;
+  --danger: #ff8a80;
+  --ok: #5fcf80;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
   }
 }
 * {
@@ -36,7 +74,7 @@ main {
 }
 h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: var(--fs-xl);
 }
 .tag,
 .hint,
@@ -56,7 +94,7 @@ h1 {
   outline: none;
 }
 .drop-title {
-  font-size: 1.125rem;
+  font-size: var(--fs-lg);
   margin: 0;
 }
 .actions {
@@ -118,7 +156,7 @@ h1 {
   background: var(--line);
 }
 .thumb .name {
-  font-size: 0.8125rem;
+  font-size: var(--fs-sm);
   overflow-wrap: anywhere;
 }
 .empty,
@@ -127,7 +165,7 @@ h1 {
   margin: 2rem 0;
 }
 .error {
-  color: #c0392b;
+  color: var(--danger);
 }
 
 .toolbar {
@@ -168,6 +206,36 @@ h1 {
 }
 .badge.remove {
   background: #b3261e;
+}
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--sp-4);
+}
+.top .tag {
+  flex: 1 1 14rem;
+}
+.theme-toggle {
+  padding: var(--sp-1) var(--sp-3);
+}
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.error {
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-3);
 }
 
 .check {

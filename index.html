@@ -14,6 +14,14 @@
     <header class="top">
       <h1>lookalike</h1>
       <p class="tag">Find duplicate photos. Everything stays on your device.</p>
+      <button
+        id="theme"
+        class="btn secondary theme-toggle"
+        type="button"
+        aria-label="Theme: system"
+      >
+        Theme: system
+      </button>
     </header>
     <main>
       <section id="drop" class="drop" tabindex="0" aria-label="Drop photos or a folder here">
@@ -31,6 +39,7 @@
         </div>
       </section>
       <section id="status" class="status" role="status" aria-live="polite" hidden>
+        <span class="spinner" aria-hidden="true"></span>
         <progress id="bar" max="1" value="0"></progress>
         <span id="status-text"></span>
         <button id="cancel" class="btn secondary" type="button">Cancel</button>

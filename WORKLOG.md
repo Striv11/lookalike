@@ -34,3 +34,9 @@ Newest entries at the bottom. Each entry records what actually changed, what was
 - Performance: the first 10k benchmark took 23 s because BigInt popcount allocates. Hamming now works on two 32-bit number halves (`split`/`hammingSplit`, precomputed in tree nodes): 10k hashes group in ~1.5 s including corpus generation. `tests/bench.test.ts` enforces an 8 s ceiling (run by check.sh) and checks tree == brute force on 1,500 hashes.
 - Learned: a tiny synthetic image can clip to all zeros, making orientation tests vacuous, so test images need adequate size. Random variants are not closed under inversion, so the brute-force oracle must probe in the same direction as the tree; real variant sets are symmetric.
 - Next: Day 6 design system (themes, type scale, loading/error states) and Playwright e2e, which should also finally exercise real browser decoding and the new checkbox.
+
+## 2026-11-27 (Day 6)
+- Design system: CSS tokens for colour, type scale, spacing and radius; dark theme now also reachable via a system/light/dark toggle (`data-theme`, remembered in localStorage); spinner in the loading state, `role="alert"` on scan errors, reduced-motion respected.
+- Playwright e2e (`e2e/app.spec.ts`, `npm run e2e`, run in a separate CI job, not in check.sh to keep it browser-free): PNGs are generated in-test with a tiny encoder (`e2e/png.ts`). Covers empty state and no overflow at 375px and 1280px, grouping a resized duplicate, unreadable-file reporting, click/keyboard marking and reset, CSV download, theme toggle. 10 runs (5 tests x 2 viewports) pass against the production build.
+- Learned: this is the first time real browser decoding, the worker and the UI were exercised; they worked unchanged. The orientation checkbox is not yet covered by e2e.
+- Next: Day 7 polish: screenshots, accessibility pass, precision/recall evaluation, e2e for the rotation checkbox.

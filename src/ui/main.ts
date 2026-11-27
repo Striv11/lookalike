@@ -37,6 +37,12 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: 
   return e;
 }
 
+function alertEl(text: string) {
+  const p = el("p", "error", text);
+  p.setAttribute("role", "alert");
+  return p;
+}
+
 function render(files: File[], s: ScanSummary) {
   reset();
   current = s;
@@ -191,7 +197,7 @@ async function run(files: File[]) {
     if ((e as DOMException).name === "AbortError") {
       if (controller === mine) results.append(el("p", "empty", "Scan cancelled."));
     } else {
-      results.append(el("p", "error", `Scan failed: ${(e as Error).message}`));
+      results.append(alertEl(`Scan failed: ${(e as Error).message}`));
     }
   } finally {
     if (controller === mine) {
@@ -200,6 +206,32 @@ async function run(files: File[]) {
     }
   }
 }
+
+const themeBtn = $("theme");
+const THEMES = ["system", "light", "dark"] as const;
+function applyTheme(t: (typeof THEMES)[number]) {
+  if (t === "system") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.dataset.theme = t;
+  themeBtn.textContent = `Theme: ${t}`;
+  themeBtn.setAttribute("aria-label", `Theme: ${t}. Activate to change.`);
+}
+let themeIdx = 0;
+try {
+  const saved = localStorage.getItem("lookalike-theme");
+  themeIdx = Math.max(0, THEMES.indexOf(saved as (typeof THEMES)[number]));
+} catch {
+  /* storage unavailable: stay on system */
+}
+applyTheme(THEMES[themeIdx]!);
+themeBtn.addEventListener("click", () => {
+  themeIdx = (themeIdx + 1) % THEMES.length;
+  applyTheme(THEMES[themeIdx]!);
+  try {
+    localStorage.setItem("lookalike-theme", THEMES[themeIdx]!);
+  } catch {
+    /* ignore */
+  }
+});
 
 $("cancel").addEventListener("click", () => controller?.abort());
 for (const id of ["pick-folder", "pick-files"]) {
