@@ -28,14 +28,10 @@
         <p class="drop-title">Drop a folder of photos here</p>
         <p class="hint">or choose them below</p>
         <div class="actions">
-          <label class="btn">
-            Choose folder
-            <input id="pick-folder" type="file" webkitdirectory multiple hidden />
-          </label>
-          <label class="btn secondary">
-            Choose files
-            <input id="pick-files" type="file" accept="image/*" multiple hidden />
-          </label>
+          <button class="btn" type="button" data-pick="pick-folder">Choose folder</button>
+          <button class="btn secondary" type="button" data-pick="pick-files">Choose files</button>
+          <input id="pick-folder" type="file" webkitdirectory multiple hidden />
+          <input id="pick-files" type="file" accept="image/*" multiple hidden />
         </div>
       </section>
       <section id="status" class="status" role="status" aria-live="polite" hidden>
@@ -57,7 +53,7 @@
           Keys: arrows move, Space/K toggles keep or remove, R resets the group, E exports.
         </p>
       </section>
-      <section id="results" aria-live="polite"></section>
+      <section id="results" aria-label="Duplicate groups"></section>
     </main>
     <script type="module" src="./src/ui/main.ts"></script>
   </body>

@@ -23,6 +23,7 @@ Everything is built from scratch to explore three ideas: perceptual hashing (aHa
 - `src/core/bktree.ts`: BK-tree range search.
 - `src/core/orient.ts`: the 8 rotations/mirrors of an image and their pHashes.
 - `src/core/group.ts`: duplicate grouping (optional rotation/flip matching, exact-duplicate fast path), plus a brute-force reference used in tests.
+- `docs/EVALUATION.md`: precision/recall results.
 - `src/ui/`: `files.ts` (folder/drop traversal, image filtering), `model.ts` (outcomes to groups), `review.ts` (best-pick, marks, CSV), `main.ts` (DOM wiring), `style.css` (design tokens, responsive, light/dark via system preference with a manual override).
 - `src/pipeline/`: `decode.ts` (createImageBitmap + OffscreenCanvas, downscaled), `process.ts` (decode + hash, never throws in the worker), `scan.ts` (worker pool with progress, abort, crash recovery), `hash.worker.ts` (the web worker).
 
@@ -47,6 +48,12 @@ Open the live page, drop a folder of photos (or use the folder picker) and see g
 - Orientation matching stores the pHash of all 8 orientations per image (7 extra) and probes the tree with each; the tree itself stays a single index. Hamming runs on two 32-bit halves, which made grouping 10k hashes about 10x faster than BigInt popcount.
 - Pure TypeScript instead of WASM: hashing a 32x32 thumbnail is cheap, and decoding dominates.
 
+## Evaluation
+Pairwise precision/recall against a labelled synthetic corpus, per edit type and radius, is in [docs/EVALUATION.md](docs/EVALUATION.md) and enforced by tests. At the default radius of 8 there were no false merges and full recall for noise, resizing and rotations/flips; clipping brightness changes are the weak spot.
+
+## Accessibility
+All controls are real buttons or inputs and keyboard reachable, thumbnails are exposed as checkboxes (keep = checked), focus is visibly outlined, and reduced-motion is respected.
+
 ## Roadmap
 - [x] Day 1: hashing, BK-tree, grouping, tests
 - [x] Day 2: decode pipeline and worker pool
@@ -54,7 +61,7 @@ Open the live page, drop a folder of photos (or use the folder picker) and see g
 - [x] Day 4: similarity slider, keep/remove review, CSV export
 - [x] Day 5: orientation-invariant matching, exact-duplicate fast path, 10k benchmark
 - [x] Day 6: design tokens, manual theme toggle, loading/error states, Playwright e2e
-- [ ] Day 7: see [PLAN.md](PLAN.md)
+- [x] Day 7: precision/recall evaluation, accessibility pass (screenshots still to do)
 
 ## License
 MIT. See [LICENSE](LICENSE).

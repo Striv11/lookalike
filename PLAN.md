@@ -10,8 +10,9 @@ Seven-day arc. Every milestone has acceptance criteria that can be checked by a 
 | 4 | Review workflow | Similarity slider regroups live; keep/remove marking with best-pick heuristic (resolution, size); keyboard shortcuts; export list as CSV | [x] |
 | 5 | Quality and robustness | Rotation/flip-invariant matching option; exact-dup fast path by size+hash; benchmark: 10k hashes grouped under a budget enforced in check.sh | [x] |
 | 6 | Design system and e2e | Light/dark themes, type scale, loading and error states; Playwright e2e for drop, group, mark flows | [x] |
-| 7 | Polish | Screenshots in README, landing section, accessibility pass, precision/recall evaluation documented | [ ] |
+| 7 | Polish | Screenshots in README, landing section, accessibility pass, precision/recall evaluation documented | [~] evaluation and a11y done; screenshots and landing section pending |
 
 ## Stretch
 - Persist hash cache in IndexedDB so re-scans are instant.
 - Optional WASM hashing kernel.
+- Day 7 leftovers: README screenshots (needs a browser in the dev environment), landing section.

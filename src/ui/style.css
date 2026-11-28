@@ -91,7 +91,10 @@ h1 {
 .drop.over,
 .drop:focus-visible {
   border-color: var(--accent);
-  outline: none;
+}
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 .drop-title {
   font-size: var(--fs-lg);

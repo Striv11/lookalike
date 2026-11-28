@@ -74,3 +74,25 @@ test("theme toggle cycles and sets data-theme", async ({ page }) => {
   await page.locator("#theme").click();
   await expect(root).not.toHaveAttribute("data-theme", /.*/);
 });
+
+test("pick buttons are keyboard-focusable and open the file chooser", async ({ page }) => {
+  const folder = page.getByRole("button", { name: "Choose folder" });
+  await folder.focus();
+  await expect(folder).toBeFocused();
+  const [chooser] = await Promise.all([
+    page.waitForEvent("filechooser"),
+    page.keyboard.press("Enter"),
+  ]);
+  await chooser.setFiles(files.slice(0, 2).map((f) => ({ ...f })));
+  await expect(page.locator(".group")).toHaveCount(1);
+});
+
+test("marks are exposed as checkboxes with a checked state", async ({ page }) => {
+  await page.locator("#pick-files").setInputFiles(files);
+  const big = page.getByRole("checkbox", { name: "a-big.png: keep" });
+  await expect(big).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("checkbox", { name: "a-small.png: remove" })).toHaveAttribute(
+    "aria-checked",
+    "false",
+  );
+});

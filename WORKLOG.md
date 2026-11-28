@@ -40,3 +40,10 @@ Newest entries at the bottom. Each entry records what actually changed, what was
 - Playwright e2e (`e2e/app.spec.ts`, `npm run e2e`, run in a separate CI job, not in check.sh to keep it browser-free): PNGs are generated in-test with a tiny encoder (`e2e/png.ts`). Covers empty state and no overflow at 375px and 1280px, grouping a resized duplicate, unreadable-file reporting, click/keyboard marking and reset, CSV download, theme toggle. 10 runs (5 tests x 2 viewports) pass against the production build.
 - Learned: this is the first time real browser decoding, the worker and the UI were exercised; they worked unchanged. The orientation checkbox is not yet covered by e2e.
 - Next: Day 7 polish: screenshots, accessibility pass, precision/recall evaluation, e2e for the rotation checkbox.
+
+## 2026-11-28 (Day 7)
+- Added `tests/eval.test.ts`: pairwise precision/recall on a labelled synthetic corpus (noise, half-size, brightness, rotate, mirror) at radii 4/8/12, with orientation on and off; results in `docs/EVALUATION.md`. Radius 8 gave no false merges; clipping brightness is the weak spot (recall 0.80); radius 12 with orientation matching drops precision to ~0.7 because of the 8x probes.
+- Accessibility pass: "Choose folder/files" were labels around `hidden` inputs, so unreachable by keyboard; they are now buttons that open the inputs. Thumbnails are `role=checkbox` with `aria-checked`, the redundant `alt` and the noisy `aria-live` on the results region were removed, and a global `:focus-visible` outline was added.
+- Not verified: the Playwright browser is not installed in this environment, so the e2e suite (including two new tests for the buttons and checkbox roles) did not run today. Please run `npm run e2e` where a browser exists. Screenshots could not be produced for the same reason.
+- Learned: my first recall assertion (0.95 with brightness included) was too optimistic; the measured number contradicted it, so I split the brightness case out and documented it rather than hiding it.
+- Next: run e2e, add README screenshots and a landing section; stretch: IndexedDB hash cache.

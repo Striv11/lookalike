@@ -69,12 +69,14 @@ function render(files: File[], s: ScanSummary) {
       cell.dataset.index = String(m.index);
       const mark = markOf(g, m, overrides);
       cell.classList.add(mark);
+      cell.setAttribute("role", "checkbox");
+      cell.setAttribute("aria-checked", String(mark === "keep"));
       cell.setAttribute("aria-label", `${m.name}: ${mark}`);
       const img = el("img");
       const url = URL.createObjectURL(files[m.index]!);
       urls.push(url);
       img.src = url;
-      img.alt = m.name;
+      img.alt = ""; // the figure carries the accessible name
       img.loading = "lazy";
       cell.append(
         img,
@@ -234,6 +236,9 @@ themeBtn.addEventListener("click", () => {
 });
 
 $("cancel").addEventListener("click", () => controller?.abort());
+for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-pick]")) {
+  btn.addEventListener("click", () => $<HTMLInputElement>(btn.dataset.pick!).click());
+}
 for (const id of ["pick-folder", "pick-files"]) {
   const input = $<HTMLInputElement>(id);
   input.addEventListener("change", () => {
